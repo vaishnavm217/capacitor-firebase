@@ -141,9 +141,14 @@ public typealias AuthStateChangedObserver = () -> Void
 
         let email = call.getString("email", "")
         let password = call.getString("password", "")
+        let tenantID = call.getString("tenantID", "")
 
         self.savedCall = call
-        Auth.auth().signIn(withEmail: email, password: password) { _, error in
+        let authVar = Auth.auth()
+        if tenantID {
+            authVar.tenantID = tenantID
+        }
+        authVar.signIn(withEmail: email, password: password) { _, error in
             if let error = error {
                 self.handleFailedSignIn(message: nil, error: error)
                 return
